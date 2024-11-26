@@ -30,6 +30,19 @@ class TestSmartRoom(unittest.TestCase):
         self.assertFalse(occupancy)
 
 
+    #second user story
+    @patch.object(GPIO, 'input')
+    def test_light_detection(self, mock_photoresistor):
+        mock_photoresistor.return_value = True
+        system = SmartRoom()
+        self.assertTrue(system.check_enough_light())
+
+
+
+
+
+
+
 
 
 
