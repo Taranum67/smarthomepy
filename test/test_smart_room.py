@@ -1,4 +1,6 @@
 import unittest
+from platform import system
+
 import mock.GPIO as GPIO
 from unittest.mock import patch, PropertyMock
 from unittest.mock import Mock
@@ -10,7 +12,25 @@ from mock.senseair_s8 import SenseairS8
 
 class TestSmartRoom(unittest.TestCase):
 
-    @patch.object(GPIO, "input")
-    def test_something(self, mock_object: Mock):
-        # This is an example of test where I want to mock the GPIO.input() function
-        pass
+    def setUp(self) -> None:
+        self.SR = SmartRoom()
+        self.SR.light_on = False
+
+     # first user story
+    @patch.object(GPIO, 'input')
+    def test_person_in(self, mock_input):
+        mock_input.return_value = 0
+        occupancy = self.SR.check_room_occupancy()
+        self.assertTrue(occupancy)
+
+    @patch.object(GPIO, 'input')
+    def test_person_out(self, mock_input):
+        mock_input.return_value = 5
+        occupancy = self.SR.check_room_occupancy()
+        self.assertFalse(occupancy)
+
+
+
+
+
+
