@@ -32,7 +32,7 @@ class TestSmartRoom(unittest.TestCase):
 
     #second user story
     @patch.object(GPIO, 'input')
-    def test_light_detection(self, mock_photoresistor):
+    def test_light_detection(self, mock_photoresistor) :
         mock_photoresistor.return_value = True
         system = SmartRoom()
         self.assertTrue(system.check_enough_light())
@@ -42,6 +42,29 @@ class TestSmartRoom(unittest.TestCase):
         mock_photoresistor.return_value = False
         system = SmartRoom()
         self.assertFalse(system.check_enough_light())
+
+    #3rd user story
+    @patch.object(GPIO, 'input')
+    @patch.object(GPIO, 'output')
+    def test_turn_bulb_on_yes_person_inside(self, mock_photoresistor, mock_red_light: Mock):
+        mock_photoresistor.return_value = True
+        system = SmartRoom()
+        system.manage_light_level()
+        mock_red_light.assert_called_once_with(system.LED_PIN, True)
+        self.assertTrue(system.mock_red_light)
+
+    @patch.object(GPIO, 'input')
+    @patch.object(GPIO, 'output')
+    def test_turn_bulb_off_no_person_inside(self, mock_photoresistor, mock_red_light: Mock):
+        mock_photoresistor.return_value = False
+        system = SmartRoom()
+        system.manage_light_level()
+        mock_red_light.assert_called_once_with(system.LED_PIN, False)
+        self.assertTrue(system.mock_red_light)
+
+
+
+
 
 
 
